@@ -38,6 +38,17 @@ namespace WebApi
                 app.UseDeveloperExceptionPage();
             }
 
+            app.Use(async (ctx, next) =>
+            {
+                await next();
+                if (ctx.Response.StatusCode == 204)
+                {
+                    ctx.Response.ContentLength = 0;
+                }
+            });
+
+            app.UseCors(options => options.WithOrigins("http://localhost:4200").AllowAnyMethod().AllowAnyHeader());
+
             app.UseMvc();
         }
     }
